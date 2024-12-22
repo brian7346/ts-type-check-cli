@@ -4,6 +4,9 @@
   "dependencies": {
     "typescript": "^5.0.0"
   },
+  "bin": {
+    "ts-check": "./dist/type-checker.js"
+  },
   "scripts": {
     "check": "ts-node src/type-checker.ts"
   },
