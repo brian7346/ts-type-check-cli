@@ -5,12 +5,19 @@
     "typescript": "^5.0.0"
   },
   "bin": {
-    "ts-check": "./src/type-checker.js"
+    "ts-check": "ts-node ./src/type-checker.js"
   },
   "scripts": {
     "build": "tsc",
     "prepare": "npm run build",
-    "check": "ts-node src/type-checker.ts"
+    "check": "ts-node src/type-checker.ts",
+    "publish": "npm run build && npm publish",
+    "version:patch": "npm version patch",
+    "version:minor": "npm version minor",
+    "version:major": "npm version major",
+    "release:patch": "npm run version:patch && npm run publish",
+    "release:minor": "npm run version:minor && npm run publish",
+    "release:major": "npm run version:major && npm run publish"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
