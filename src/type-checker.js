@@ -41,7 +41,7 @@ if (process.argv.length < 3) {
     process.exit(1);
 }
 const filePath = process.argv[2];
-const absolutePath = path.resolve(filePath);
+const absolutePath = path.resolve(process.cwd(), filePath);
 console.log('Проверка типов...');
 const configPath = ts.findConfigFile(process.cwd(), ts.sys.fileExists, 'tsconfig.json');
 if (!configPath) {

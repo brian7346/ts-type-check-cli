@@ -9,7 +9,7 @@ if (process.argv.length < 3) {
 }
 
 const filePath = process.argv[2];
-const absolutePath = path.resolve(filePath);
+const absolutePath = path.resolve(process.cwd(), `.src/${filePath}`); 
 
 console.log('Проверка типов...');
 
