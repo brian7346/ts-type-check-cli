@@ -1,6 +1,6 @@
 {
   "name": "ts-type-check-cli",
-  "version": "1.1.2",
+  "version": "1.2.3",
   "dependencies": {
     "typescript": "^5.0.0",
     "@types/node": "^20.0.0",
@@ -8,11 +8,11 @@
     "commander": "^10.0.0"
   },
   "bin": {
+    "generate-type-checks": "./src/generate-type-check-scripts.ts",
     "ts-check": "./src/type-checker.ts"
   },
   "scripts": {
     "build": "tsc",
-    "prepare": "npm run build",
     "check": "ts-node src/type-checker.ts"
   },
   "author": "Max Roslow",
