@@ -1,11 +1,11 @@
 {
   "name": "ts-type-check-cli",
-  "version": "1.0.5",
+  "version": "1.0.8",
   "dependencies": {
     "typescript": "^5.0.0"
   },
   "bin": {
-    "ts-check": "ts-node ./src/type-checker.js"
+    "ts-check": "./src/type-checker.ts"
   },
   "scripts": {
     "build": "tsc",
