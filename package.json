@@ -1,0 +1,17 @@
+{
+  "name": "ts-type-check-cli",
+  "version": "1.0.0",
+  "dependencies": {
+    "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "check": "ts-node src/type-checker.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.0.0"
+  },
+  "author": "Max Roslow",
+  "license": "ISC",
+  "description": "CLI tool for checking TypeScript types"
+}
