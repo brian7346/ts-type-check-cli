@@ -58,7 +58,7 @@ function checkTypes(filePath_1) {
                 return;
             console.clear();
             console.log(chalk_1.default.cyan('Проверка типов...'));
-            const absolutePath = path.resolve(process.cwd(), `./src/${filePath}`);
+            const absolutePath = path.resolve(process.cwd(), filePath);
             const configPath = options.project
                 ? path.resolve(process.cwd(), options.project)
                 : ts.findConfigFile(process.cwd(), ts.sys.fileExists, 'tsconfig.json');

@@ -24,7 +24,7 @@ function run() {
             try {
                 // Создаем промис, который никогда не разрешится
                 yield new Promise((resolve) => {
-                    (0, checker_1.checkTypes)(file, {
+                    (0, checker_1.checkTypes)(`./src/${file}`, {
                         project: options.project,
                         watch: true
                     }).catch((error) => {

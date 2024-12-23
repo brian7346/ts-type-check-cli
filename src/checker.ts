@@ -17,7 +17,7 @@ export async function checkTypes(filePath: string, options: CheckOptions = {}) {
     console.clear();
     console.log(chalk.cyan('Проверка типов...'));
     
-    const absolutePath = path.resolve(process.cwd(), `./src/${filePath}`);
+    const absolutePath = path.resolve(process.cwd(), filePath);
     
     const configPath = options.project 
       ? path.resolve(process.cwd(), options.project)

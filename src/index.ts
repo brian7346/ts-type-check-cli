@@ -13,7 +13,7 @@ async function run() {
       try {
         // Создаем промис, который никогда не разрешится
         await new Promise<void>((resolve) => {
-          checkTypes(file, {
+          checkTypes(`./src/${file}`, {
             project: options.project,
             watch: true
           }).catch((error) => {
