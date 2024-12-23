@@ -1,19 +1,22 @@
 {
   "name": "ts-type-check-cli",
   "version": "1.2.3",
+  "main": "dist/index.js",
   "dependencies": {
-    "typescript": "^5.0.0",
     "@types/node": "^20.0.0",
+    "chalk": "^4.1.2",
+    "commander": "^10.0.0",
     "ts-node": "^10.0.0",
-    "commander": "^10.0.0"
+    "typescript": "^5.0.0"
   },
   "bin": {
     "generate-type-checks": "./src/generate-type-check-scripts.ts",
-    "ts-check": "./src/type-checker.ts"
+    "ts-check": "./dist/index.js"
   },
   "scripts": {
     "build": "tsc",
-    "check": "ts-node src/type-checker.ts"
+    "prepublishOnly": "npm run build",
+    "dev": "ts-node src/index.ts"
   },
   "author": "Max Roslow",
   "description": "CLI tool for checking TypeScript types"
