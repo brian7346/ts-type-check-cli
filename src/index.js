@@ -12,27 +12,37 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const commander_1 = require("commander");
 const checker_1 = require("./checker");
-commander_1.program
-    .name('ts-check')
-    .description('TypeScript type checker CLI')
-    .version('1.0.0')
-    .argument('<file>', 'TypeScript file to check')
-    .option('-p, --project <path>', 'Path to tsconfig.json')
-    .action((file, options) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        yield (0, checker_1.checkTypes)(file, {
-            project: options.project,
-            watch: true
-        });
-    }
-    catch (error) {
-        if (error instanceof Error) {
-            console.error(error.message);
-        }
-        else {
-            console.error('Произошла неизвестная ошибка');
-        }
-        process.exit(1);
-    }
-}));
-commander_1.program.parse();
+function run() {
+    return __awaiter(this, void 0, void 0, function* () {
+        commander_1.program
+            .name('ts-check')
+            .description('TypeScript type checker CLI')
+            .version('1.0.0')
+            .argument('<file>', 'TypeScript file to check')
+            .option('-p, --project <path>', 'Path to tsconfig.json')
+            .action((file, options) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                // Создаем промис, который никогда не разрешится
+                yield new Promise((resolve) => {
+                    (0, checker_1.checkTypes)(file, {
+                        project: options.project,
+                        watch: true
+                    }).catch((error) => {
+                        console.error(error instanceof Error ? error.message : 'Неизвестная ошибка');
+                    });
+                });
+            }
+            catch (error) {
+                if (error instanceof Error) {
+                    console.error(error.message);
+                }
+                else {
+                    console.error('Произошла неизвестная ошибка');
+                }
+                process.exit(1);
+            }
+        }));
+        yield commander_1.program.parseAsync();
+    });
+}
+run().catch(console.error);

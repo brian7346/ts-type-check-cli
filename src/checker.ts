@@ -9,7 +9,11 @@ interface CheckOptions {
 }
 
 export async function checkTypes(filePath: string, options: CheckOptions = {}) {
+  let isWatching = true;
+
   const check = async () => {
+    if (!isWatching) return;
+    
     console.clear();
     console.log(chalk.cyan('Проверка типов...'));
     
@@ -70,13 +74,13 @@ export async function checkTypes(filePath: string, options: CheckOptions = {}) {
   // Запускаем первую проверку
   await check();
 
-  // Настраиваем watcher
   const watcher = chokidar.watch(filePath, { 
     persistent: true,
     ignoreInitial: true 
   });
 
   watcher.on('all', async (event, path) => {
+    if (!isWatching) return;
     console.log(chalk.gray(`\nФайл изменен (${event}): ${path}`));
     try {
       await check();
@@ -88,13 +92,15 @@ export async function checkTypes(filePath: string, options: CheckOptions = {}) {
   console.log(chalk.cyan(`\nОтслеживание изменений в ${filePath}...`));
   console.log(chalk.gray('Нажмите Ctrl+C для выхода'));
 
-  // Держим процесс активным с помощью setInterval
-  const interval = setInterval(() => {}, 1000);
-
   // Обработка выхода
   process.on('SIGINT', () => {
+    isWatching = false;
     console.log(chalk.yellow('\nЗавершение работы...'));
-    clearInterval(interval);
     watcher.close().then(() => process.exit(0));
+  });
+
+  // Держим процесс активным
+  return new Promise<void>(() => {
+    // Этот промис никогда не разрешится
   });
 }

@@ -52,7 +52,10 @@ const chalk_1 = __importDefault(require("chalk"));
 const chokidar = __importStar(require("chokidar"));
 function checkTypes(filePath_1) {
     return __awaiter(this, arguments, void 0, function* (filePath, options = {}) {
+        let isWatching = true;
         const check = () => __awaiter(this, void 0, void 0, function* () {
+            if (!isWatching)
+                return;
             console.clear();
             console.log(chalk_1.default.cyan('Проверка типов...'));
             const absolutePath = path.resolve(process.cwd(), `./src/${filePath}`);
@@ -88,12 +91,13 @@ function checkTypes(filePath_1) {
         });
         // Запускаем первую проверку
         yield check();
-        // Настраиваем watcher
         const watcher = chokidar.watch(filePath, {
             persistent: true,
             ignoreInitial: true
         });
         watcher.on('all', (event, path) => __awaiter(this, void 0, void 0, function* () {
+            if (!isWatching)
+                return;
             console.log(chalk_1.default.gray(`\nФайл изменен (${event}): ${path}`));
             try {
                 yield check();
@@ -104,13 +108,15 @@ function checkTypes(filePath_1) {
         }));
         console.log(chalk_1.default.cyan(`\nОтслеживание изменений в ${filePath}...`));
         console.log(chalk_1.default.gray('Нажмите Ctrl+C для выхода'));
-        // Держим процесс активным с помощью setInterval
-        const interval = setInterval(() => { }, 1000);
         // Обработка выхода
         process.on('SIGINT', () => {
+            isWatching = false;
             console.log(chalk_1.default.yellow('\nЗавершение работы...'));
-            clearInterval(interval);
             watcher.close().then(() => process.exit(0));
+        });
+        // Держим процесс активным
+        return new Promise(() => {
+            // Этот промис никогда не разрешится
         });
     });
 }
