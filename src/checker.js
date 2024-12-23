@@ -51,7 +51,7 @@ const path = __importStar(require("path"));
 const chalk_1 = __importDefault(require("chalk"));
 function checkTypes(filePath_1) {
     return __awaiter(this, arguments, void 0, function* (filePath, options = {}) {
-        const absolutePath = path.resolve(process.cwd(), filePath);
+        const absolutePath = path.resolve(process.cwd(), `./src/${filePath}`);
         console.log(chalk_1.default.cyan('Проверка типов...'));
         const configPath = options.project
             ? path.resolve(process.cwd(), options.project)

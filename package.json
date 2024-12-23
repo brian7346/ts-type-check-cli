@@ -1,6 +1,6 @@
 {
   "name": "ts-type-check-cli",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "main": "src/index.js",
   "dependencies": {
     "@types/node": "^20.0.0",
@@ -10,7 +10,7 @@
     "typescript": "^5.0.0"
   },
   "bin": {
-    "generate-type-checks": "./src/generate-type-check-scripts.ts",
+    "generate-type-checks": "./src/generate-type-check-scripts.js",
     "ts-check": "./src/index.js"
   },
   "scripts": {

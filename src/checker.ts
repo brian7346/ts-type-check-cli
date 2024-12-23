@@ -7,7 +7,7 @@ interface CheckOptions {
 }
 
 export async function checkTypes(filePath: string, options: CheckOptions = {}) {
-  const absolutePath = path.resolve(process.cwd(), filePath);
+  const absolutePath = path.resolve(process.cwd(), `./src/${filePath}`);
   
   console.log(chalk.cyan('Проверка типов...'));
 
