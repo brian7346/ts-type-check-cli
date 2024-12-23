@@ -1,6 +1,6 @@
 {
   "name": "ts-type-check-cli",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "main": "src/index.js",
   "dependencies": {
     "@types/node": "^20.0.0",
