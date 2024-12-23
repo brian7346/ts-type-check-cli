@@ -38,7 +38,7 @@ export async function checkTypes(filePath: string, options: CheckOptions = {}) {
     const diagnostics = ts.getPreEmitDiagnostics(program);
 
     if (diagnostics.length === 0) {
-      console.log(chalk.green('✓ Проверка типов успешно пройдена!'));
+      console.log(chalk.green('✅ Проверка типов успешно пройдена!'));
       return;
     }
 
@@ -69,6 +69,8 @@ export async function checkTypes(filePath: string, options: CheckOptions = {}) {
         );
       }
     });
+
+    console.log(chalk.red(`\n❌ Исправь ошибки и попробуй снова!\n`));
   };
 
   // Запускаем первую проверку
