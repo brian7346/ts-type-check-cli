@@ -10,13 +10,16 @@ program
   .option('-p, --project <path>', 'Path to tsconfig.json')
   .action(async (file, options) => {
     try {
-      await checkTypes(file, options);
+      await checkTypes(file, {
+        project: options.project,
+        watch: true 
+      });
     } catch (error) {
-        if (error instanceof Error) {
-            console.error(error.message);
-        } else {
-            console.error('Произошла неизвестная ошибка');
-        }
+      if (error instanceof Error) {
+        console.error(error.message);
+      } else {
+        console.error('Произошла неизвестная ошибка');
+      }
       process.exit(1);
     }
   });

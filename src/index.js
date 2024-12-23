@@ -20,7 +20,10 @@ commander_1.program
     .option('-p, --project <path>', 'Path to tsconfig.json')
     .action((file, options) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        yield (0, checker_1.checkTypes)(file, options);
+        yield (0, checker_1.checkTypes)(file, {
+            project: options.project,
+            watch: true
+        });
     }
     catch (error) {
         if (error instanceof Error) {

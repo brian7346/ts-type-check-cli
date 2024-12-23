@@ -49,41 +49,68 @@ exports.checkTypes = checkTypes;
 const ts = __importStar(require("typescript"));
 const path = __importStar(require("path"));
 const chalk_1 = __importDefault(require("chalk"));
+const chokidar = __importStar(require("chokidar"));
 function checkTypes(filePath_1) {
     return __awaiter(this, arguments, void 0, function* (filePath, options = {}) {
-        const absolutePath = path.resolve(process.cwd(), `./src/${filePath}`);
-        console.log(chalk_1.default.cyan('Проверка типов...'));
-        const configPath = options.project
-            ? path.resolve(process.cwd(), options.project)
-            : ts.findConfigFile(process.cwd(), ts.sys.fileExists, 'tsconfig.json');
-        if (!configPath) {
-            throw new Error(chalk_1.default.red('Не найден tsconfig.json'));
-        }
-        const configFile = ts.readConfigFile(configPath, ts.sys.readFile);
-        const parsedConfig = ts.parseJsonConfigFileContent(configFile.config, ts.sys, path.dirname(configPath));
-        const program = ts.createProgram([absolutePath], parsedConfig.options);
-        const diagnostics = ts.getPreEmitDiagnostics(program);
-        if (diagnostics.length === 0) {
-            console.log(chalk_1.default.green('✓ Проверка типов успешно пройдена!'));
-            return;
-        }
-        console.log(chalk_1.default.red(`\nНайдено ошибок: ${diagnostics.length}\n`));
-        diagnostics.forEach(diagnostic => {
-            if (diagnostic.file) {
-                const { line, character } = ts.getLineAndCharacterOfPosition(diagnostic.file, diagnostic.start);
-                const message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n');
-                const fileName = path.relative(process.cwd(), diagnostic.file.fileName);
-                // Форматированный вывод ошибки
-                console.log(`${chalk_1.default.cyan(fileName)}:${chalk_1.default.yellow(`${line + 1}:${character + 1}`)} - ` +
-                    `${chalk_1.default.red('error')} ${chalk_1.default.gray(`TS${diagnostic.code}`)}: ${message}`);
-                // Показываем проблемную строку кода с подсветкой
-                const lineText = diagnostic.file.text.split('\n')[line];
-                const errorLength = diagnostic.length || 1;
-                console.log();
-                console.log(lineText);
-                console.log(chalk_1.default.red(' '.repeat(character) + '~'.repeat(errorLength)));
+        const check = () => __awaiter(this, void 0, void 0, function* () {
+            console.clear();
+            console.log(chalk_1.default.cyan('Проверка типов...'));
+            const absolutePath = path.resolve(process.cwd(), filePath);
+            const configPath = options.project
+                ? path.resolve(process.cwd(), options.project)
+                : ts.findConfigFile(process.cwd(), ts.sys.fileExists, 'tsconfig.json');
+            if (!configPath) {
+                throw new Error(chalk_1.default.red('Не найден tsconfig.json'));
             }
+            const configFile = ts.readConfigFile(configPath, ts.sys.readFile);
+            const parsedConfig = ts.parseJsonConfigFileContent(configFile.config, ts.sys, path.dirname(configPath));
+            const program = ts.createProgram([absolutePath], parsedConfig.options);
+            const diagnostics = ts.getPreEmitDiagnostics(program);
+            if (diagnostics.length === 0) {
+                console.log(chalk_1.default.green('✓ Проверка типов успешно пройдена!'));
+                return;
+            }
+            console.log(chalk_1.default.red(`\nНайдено ошибок: ${diagnostics.length}\n`));
+            diagnostics.forEach(diagnostic => {
+                if (diagnostic.file) {
+                    const { line, character } = ts.getLineAndCharacterOfPosition(diagnostic.file, diagnostic.start);
+                    const message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n');
+                    const fileName = path.relative(process.cwd(), diagnostic.file.fileName);
+                    console.log(`${chalk_1.default.cyan(fileName)}:${chalk_1.default.yellow(`${line + 1}:${character + 1}`)} - ` +
+                        `${chalk_1.default.red('error')} ${chalk_1.default.gray(`TS${diagnostic.code}`)}: ${message}`);
+                    const lineText = diagnostic.file.text.split('\n')[line];
+                    const errorLength = diagnostic.length || 1;
+                    console.log();
+                    console.log(lineText);
+                    console.log(chalk_1.default.red(' '.repeat(character) + '~'.repeat(errorLength)));
+                }
+            });
         });
-        throw new Error(chalk_1.default.red('\nПроверка типов не пройдена'));
+        // Запускаем первую проверку
+        yield check();
+        // Настраиваем watcher
+        const watcher = chokidar.watch(filePath, {
+            persistent: true,
+            ignoreInitial: true
+        });
+        watcher.on('all', (event, path) => __awaiter(this, void 0, void 0, function* () {
+            console.log(chalk_1.default.gray(`\nФайл изменен (${event}): ${path}`));
+            try {
+                yield check();
+            }
+            catch (error) {
+                console.error(error instanceof Error ? error.message : 'Неизвестная ошибка');
+            }
+        }));
+        console.log(chalk_1.default.cyan(`\nОтслеживание изменений в ${filePath}...`));
+        console.log(chalk_1.default.gray('Нажмите Ctrl+C для выхода'));
+        // Держим процесс активным с помощью setInterval
+        const interval = setInterval(() => { }, 1000);
+        // Обработка выхода
+        process.on('SIGINT', () => {
+            console.log(chalk_1.default.yellow('\nЗавершение работы...'));
+            clearInterval(interval);
+            watcher.close().then(() => process.exit(0));
+        });
     });
 }
