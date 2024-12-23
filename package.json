@@ -1,7 +1,7 @@
 {
   "name": "ts-type-check-cli",
-  "version": "1.2.3",
-  "main": "dist/index.js",
+  "version": "2.0.0",
+  "main": "src/index.js",
   "dependencies": {
     "@types/node": "^20.0.0",
     "chalk": "^4.1.2",
@@ -11,7 +11,7 @@
   },
   "bin": {
     "generate-type-checks": "./src/generate-type-check-scripts.ts",
-    "ts-check": "./dist/index.js"
+    "ts-check": "./src/index.js"
   },
   "scripts": {
     "build": "tsc",
